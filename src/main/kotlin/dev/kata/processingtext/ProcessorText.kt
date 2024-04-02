@@ -5,11 +5,12 @@ import kotlin.collections.HashMap
 
 class ProcessorText:Processor {
     override fun analyse(text: String): String {
+        val textChecked = getTextChecked(text)
         var msg = "Those are the top 10 words used:\n\n"
-        val mostUsedWords = this.getTopTenMostUsedWord(text)
+        val mostUsedWords = this.getTopTenMostUsedWord(textChecked)
 
         msg = addListWordsToText(mostUsedWords, msg)
-        msg += "The text has in total ${this.getTotalWords(text)} words"
+        msg += "The text has in total ${this.getTotalWords(textChecked)} words"
 
         return msg
     }
@@ -17,6 +18,14 @@ class ProcessorText:Processor {
 
     private fun getTotalWords(text:String):Int{
         return text.lowercase(Locale.getDefault()).split(" ").size
+    }
+
+    fun getTextChecked(text:String):String{
+        if(text.contains("```")){
+            val position = text.indexOf( "```" )
+            return text.slice(0 until position).trim()
+        }
+        return text
     }
 
 
