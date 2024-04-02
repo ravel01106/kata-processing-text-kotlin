@@ -17,8 +17,8 @@ class ProcessorText:Processor {
             msg += "${count}. ${it}\n"
             count += 1
         }
-        val totalWords = text.lowercase(Locale.getDefault()).split(" ").size
-        msg += "The text has in total $totalWords words"
+
+        msg += "The text has in total ${this.getTotalWords(text)} words"
         return msg
     }
 
@@ -40,6 +40,9 @@ class ProcessorText:Processor {
             iterationWithWords[it.value] = valueDefault
         }
         return iterationWithWords
+    }
+    private fun getTotalWords(text:String):Int{
+        return text.lowercase(Locale.getDefault()).split(" ").size
     }
 
     private fun obtainTopTenMostUsedWord(iterationWithWords:HashMap<Int, MutableList<String>>):List<String>{
