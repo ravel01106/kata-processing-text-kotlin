@@ -35,4 +35,18 @@ class ProcessorText:Processor {
         msg += "The text has in total $totalWords words"
         return msg
     }
+
+    override fun calculateReadingTime(text: String): String {
+        var msg = "The reading time for this article is ";
+        val READING_SPEED = 200.0;
+
+        val totalWords = text.split(" ", "\n").toMutableList().size
+        val speedInMinutes =  (totalWords / READING_SPEED).toInt()
+        val speedInSeconds = ((totalWords / READING_SPEED) - speedInMinutes) * 0.60
+        var seconds = speedInSeconds.toString().split(".")[1].substring(0,2)
+        seconds = if (seconds.startsWith("0")) seconds.substring(1) else seconds
+
+         msg += "$speedInMinutes minutes and $seconds seconds."
+        return msg
+    }
 }
