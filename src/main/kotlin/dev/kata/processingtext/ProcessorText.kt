@@ -9,16 +9,9 @@ class ProcessorText:Processor {
 
         val dividedText = text.lowercase(Locale.getDefault()).split(Regex("([,.\\s]+)")).toMutableList()
         val wordsWithTheirIteration = this.obtainWordsWithTheirIterations(dividedText)
-        val eachIterationWithWords = HashMap<Int, MutableList<String>>()
+        val eachIterationWithWords = this.obtainIterationWithWords(wordsWithTheirIteration)
         val mostUsedWords = mutableListOf<String>()
 
-
-        wordsWithTheirIteration.forEach{
-            var valueDefault = eachIterationWithWords.getOrDefault(it.value, mutableListOf())
-            valueDefault.add(it.key)
-            valueDefault = valueDefault.sorted().toMutableList()
-            eachIterationWithWords[it.value] = valueDefault
-        }
 
         eachIterationWithWords.forEach{ it->
             it.value.forEach{mostUsedWords.add(it)}
@@ -40,6 +33,17 @@ class ProcessorText:Processor {
             wordsWithTheirIteration[word] = oldCount + 1
         }
         return wordsWithTheirIteration
+    }
+
+    private fun obtainIterationWithWords(wordsWithIterations:HashMap<String, Int>):HashMap<Int, MutableList<String>>{
+        val iterationWithWords = HashMap<Int, MutableList<String>>()
+        wordsWithIterations.forEach{
+            var valueDefault = iterationWithWords.getOrDefault(it.value, mutableListOf())
+            valueDefault.add(it.key)
+            valueDefault = valueDefault.sorted().toMutableList()
+            iterationWithWords[it.value] = valueDefault
+        }
+        return iterationWithWords
     }
 
 
