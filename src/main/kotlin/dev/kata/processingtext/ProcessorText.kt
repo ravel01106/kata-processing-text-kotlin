@@ -9,15 +9,11 @@ class ProcessorText:Processor {
 
         val dividedText = text.lowercase(Locale.getDefault()).split(Regex("([,.\\s]+)")).toMutableList()
         val wordsWithTheirIteration = this.obtainWordsWithTheirIterations(dividedText)
-        val eachIterationWithWords = this.obtainIterationWithWords(wordsWithTheirIteration)
-        val mostUsedWords = mutableListOf<String>()
+        val iterationWithWords = this.obtainIterationWithWords(wordsWithTheirIteration)
+        val mostUsedWords = this.obtainTopTenMostUsedWord(iterationWithWords)
 
-
-        eachIterationWithWords.forEach{ it->
-            it.value.forEach{mostUsedWords.add(it)}
-        }
         var count = 1
-        mostUsedWords.reversed().slice(0..9).forEach{
+        mostUsedWords.forEach{
             msg += "${count}. ${it}\n"
             count += 1
         }
@@ -44,6 +40,14 @@ class ProcessorText:Processor {
             iterationWithWords[it.value] = valueDefault
         }
         return iterationWithWords
+    }
+
+    private fun obtainTopTenMostUsedWord(iterationWithWords:HashMap<Int, MutableList<String>>):List<String>{
+        val mostUsedWords = mutableListOf<String>()
+        iterationWithWords.forEach{ it->
+            it.value.forEach{mostUsedWords.add(it)}
+        }
+        return mostUsedWords.reversed().slice(0..9)
     }
 
 
