@@ -12,12 +12,7 @@ class ProcessorText:Processor {
         val iterationWithWords = this.obtainIterationWithWords(wordsWithTheirIteration)
         val mostUsedWords = this.obtainTopTenMostUsedWord(iterationWithWords)
 
-        var count = 1
-        mostUsedWords.forEach{
-            msg += "${count}. ${it}\n"
-            count += 1
-        }
-
+        msg = addListWordsToText(mostUsedWords, msg)
         msg += "The text has in total ${this.getTotalWords(text)} words"
         return msg
     }
@@ -43,6 +38,16 @@ class ProcessorText:Processor {
     }
     private fun getTotalWords(text:String):Int{
         return text.lowercase(Locale.getDefault()).split(" ").size
+    }
+
+    private fun addListWordsToText(words:List<String>, text:String):String{
+        var msg = text
+        var count = 1
+        words.forEach{
+            msg += "${count}. ${it}\n"
+            count += 1
+        }
+        return msg
     }
 
     private fun obtainTopTenMostUsedWord(iterationWithWords:HashMap<Int, MutableList<String>>):List<String>{
