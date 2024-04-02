@@ -7,7 +7,7 @@ class ProcessorText:Processor {
     override fun analyse(text: String): String {
         var msg = "Those are the top 10 words used:\n\n"
 
-        val dividedText = text.lowercase(Locale.getDefault()).split(Regex("([,.\\s]+)")).toMutableList()
+        val dividedText = divideTextByWords(text)
         val wordsWithTheirIteration = this.obtainWordsWithTheirIterations(dividedText)
         val iterationWithWords = this.obtainIterationWithWords(wordsWithTheirIteration)
         val mostUsedWords = this.obtainTopTenMostUsedWord(iterationWithWords)
@@ -50,12 +50,17 @@ class ProcessorText:Processor {
         return msg
     }
 
+
     private fun obtainTopTenMostUsedWord(iterationWithWords:HashMap<Int, MutableList<String>>):List<String>{
         val mostUsedWords = mutableListOf<String>()
         iterationWithWords.forEach{ it->
             it.value.forEach{mostUsedWords.add(it)}
         }
         return mostUsedWords.reversed().slice(0..9)
+    }
+
+    private fun divideTextByWords(text:String): MutableList<String>{
+        return text.lowercase(Locale.getDefault()).split(Regex("([,.\\s]+)")).toMutableList()
     }
 
 
