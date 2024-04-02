@@ -6,16 +6,24 @@ import kotlin.collections.HashMap
 class ProcessorText:Processor {
     override fun analyse(text: String): String {
         var msg = "Those are the top 10 words used:\n\n"
-
-        val dividedText = divideTextByWords(text)
-        val wordsWithTheirIteration = this.obtainWordsWithTheirIterations(dividedText)
-        val iterationWithWords = this.obtainIterationWithWords(wordsWithTheirIteration)
-        val mostUsedWords = this.obtainTopTenMostUsedWord(iterationWithWords)
+        val mostUsedWords = this.getTopTenMostUsedWord(text)
 
         msg = addListWordsToText(mostUsedWords, msg)
         msg += "The text has in total ${this.getTotalWords(text)} words"
+
         return msg
     }
+
+
+    private fun getTotalWords(text:String):Int{
+        return text.lowercase(Locale.getDefault()).split(" ").size
+    }
+
+
+    private fun divideTextByWords(text:String): MutableList<String>{
+        return text.lowercase(Locale.getDefault()).split(Regex("([,.\\s]+)")).toMutableList()
+    }
+
 
     private fun obtainWordsWithTheirIterations(words:MutableList<String>):HashMap<String, Int>{
         val wordsWithTheirIteration = HashMap<String, Int>()
@@ -25,6 +33,7 @@ class ProcessorText:Processor {
         }
         return wordsWithTheirIteration
     }
+
 
     private fun obtainIterationWithWords(wordsWithIterations:HashMap<String, Int>):HashMap<Int, MutableList<String>>{
         val iterationWithWords = HashMap<Int, MutableList<String>>()
@@ -36,9 +45,21 @@ class ProcessorText:Processor {
         }
         return iterationWithWords
     }
-    private fun getTotalWords(text:String):Int{
-        return text.lowercase(Locale.getDefault()).split(" ").size
+
+
+    private fun getTopTenMostUsedWord(text:String):List<String>{
+        val dividedText = this.divideTextByWords(text)
+        val wordsWithTheirIteration = this.obtainWordsWithTheirIterations(dividedText)
+        val iterationWithWords = this.obtainIterationWithWords(wordsWithTheirIteration)
+        val mostUsedWords = mutableListOf<String>()
+
+        iterationWithWords.forEach{ it->
+            it.value.forEach{mostUsedWords.add(it)}
+        }
+
+        return mostUsedWords.reversed().slice(0..9)
     }
+
 
     private fun addListWordsToText(words:List<String>, text:String):String{
         var msg = text
@@ -48,19 +69,6 @@ class ProcessorText:Processor {
             count += 1
         }
         return msg
-    }
-
-
-    private fun obtainTopTenMostUsedWord(iterationWithWords:HashMap<Int, MutableList<String>>):List<String>{
-        val mostUsedWords = mutableListOf<String>()
-        iterationWithWords.forEach{ it->
-            it.value.forEach{mostUsedWords.add(it)}
-        }
-        return mostUsedWords.reversed().slice(0..9)
-    }
-
-    private fun divideTextByWords(text:String): MutableList<String>{
-        return text.lowercase(Locale.getDefault()).split(Regex("([,.\\s]+)")).toMutableList()
     }
 
 
@@ -77,4 +85,6 @@ class ProcessorText:Processor {
          msg += "$speedInMinutes minutes and $seconds seconds."
         return msg
     }
+
+
 }
